@@ -5,9 +5,18 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   mode: "production",
 
-  entry: "./src/index.js",
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
+  },
+
+  entry: {
+    hello: "./src/hello.js",
+    "add-image": "./src/add-image.js",
+  },
   output: {
-    filename: "bundle.[contenthash].js",
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "./dist"),
     clean: true,
   },
@@ -36,10 +45,17 @@ module.exports = {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "styles.css",
+      filename: "[name].[contenthash].css",
     }),
     new HtmlWebpackPlugin({
-      template: "src/index.html",
+      filename: "hello.html",
+      template: "src/page-template.html",
+      chunks: ["hello"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "image.html",
+      template: "src/page-template.html",
+      chunks: ["add-image"],
     }),
   ],
 };
